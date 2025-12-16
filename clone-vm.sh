@@ -15,6 +15,8 @@ else
     VM_CLONE_DISK_FORMAT=$4
 fi
 
+echo "$(date) Starting."
+
 VIM_OUTPUT=$(vim-cmd vmsvc/getallvms | grep ${VM_NAME_SOURCE})
 if [[ ${?} -gt 0 ]]; then
     echo "$(date) Could not find VM ${VM_NAME_SOURCE} registered on host! Check output of vim-cmd vmsvc/getallvms"
@@ -94,3 +96,5 @@ if [[ ${?} -gt 0 ]]; then
     echo "$(date) Some error registering cloned VM on host! Check ${VM_PATH_CLONE}/${VM_NAME_CLONE}.vmx and try again manually using vim-cmd solo/registervm ${VM_PATH_CLONE}/${VM_NAME_CLONE}.vmx"
     exit 1
 fi
+
+echo "$(date) Done."
