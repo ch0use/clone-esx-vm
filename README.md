@@ -46,13 +46,18 @@ ssh root@<ESX hostname>
 [root@<ESX hostname>:~] chmod +x /tmp/clone-vm.sh
 ```
 
-5. Clone the VM using the script:
+5. Clone the VM using the script and providing the following positional arguments:
+   1. required: original VM name
+   2. required: cloned VM name
+   3. required: cloned VM destination datastore (even if same as original VM)
+   4. optional: disk format type. default: `thin`. (*See `vmkfstools` for other disk format types.*)
+
 
 ```shell
 /tmp/clone-vm.sh <original VM name> <cloned VM name> <cloned VM datastore> <optional disk format type, default: thin>
 ```
 
-Example:
+**Example**:
 
 Clones the registered/powered-off VM `vcf-sddc-downloaded` to a new VM called `vcf-sddc`, on the datastore `datastore1`, using the `thin` disk format (default)
 
