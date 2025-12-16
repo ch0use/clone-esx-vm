@@ -24,6 +24,15 @@ else
     echo ${VIM_OUTPUT}
 fi
 
+VMID=$(echo ${VIM_OUTPUT} | awk '{print($1)}')
+vim-cmd vmsvc/power.getstate ${VMID} | grep "Powered off"
+if [[ ${?} -gt 0 ]]; then
+    echo "$(date) VM ${VM_NAME_SOURCE} is not in a Powered off state! Check output of vim-cmd vmsvc/power.getstate ${VMID}"
+    exit 1
+else
+    echo "$(date) VM ${VM_NAME_SOURCE} is powered off."
+fi
+
 VM_DS_CLONE_PATH="/vmfs/volumes/${VM_DS_CLONE}"
 ls -la ${VM_DS_CLONE_PATH}
 if [[ ${?} -gt 0 ]]; then
