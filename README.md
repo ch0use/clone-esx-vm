@@ -26,6 +26,7 @@ This tool was tested successfully on ESXi 8 and ESX 9 but should work on older v
 * VM can have any number of snapshots, but only the current disk(s) will be used for the clone.
 * ESX host must have SSH access enabled
 * ESX host root password must be known. 
+* Destination datastore must have sufficient free space. The script does not check, but will error if it cannot complete the cloning because of insufficient space.
 
 1. If not already running, start the `TSM-SSH` service on the ESX host where the VM is registered.
 2. SSH as root to the host, using the root password.
