@@ -1,8 +1,12 @@
- # Clone ESX VM on service console without vCenter
+# Clone ESX VM on service console without vCenter
 
 This tool automates cloning of a powered-off ESX VM without the need for vCenter by using the ESX service console via SSH.
 
 ## Description
+
+There are two scripts, one which clones the entire VM including its disks, and one that only clones the config of the VM and creates new blank disks based on the size of the existing ones
+
+### clone-vm.sh
 
 Clones a VM directly within an ESX host, without requiring vCenter. VM can be cloned to the same datastore, or a different one. The script uses `vmkfstools` to clone the disk, with a default disk format of `thin`.
 
@@ -12,6 +16,12 @@ The script clones whichever disks are configured in the VMX file, so if the VM h
 
 Functionally, the clone maintains the same MAC address and UUID of the original, so be sure to answer the VM question during clone power-on when prompted with "I copied it".
 
+### clone-vm-createdisks.sh
+
+Operates identically to `clone-vm.sh`, but does not clone the disks, instead creates new blank disks of the same size.
+
+## Requirements
+
 The following built-in VMware utilities are used, in addition to common Linux utilities (`grep`, `sed`, `awk`):
 
 * `vim-cmd`
@@ -19,17 +29,17 @@ The following built-in VMware utilities are used, in addition to common Linux ut
 
 This tool was tested successfully on ESXi 8 and ESX 9 but should work on older versions as well.
 
-## Pre-requisites
-
 * VM must be registered on an ESX host
 * VM must be powered off
 * VM can have any number of snapshots, but only the current disk(s) will be used for the clone.
-* ESX host must have SSH access enabled
-* ESX host root password must be known. 
-* Destination datastore must have sufficient free space. The script does not check, but will error if it cannot complete the cloning because of insufficient space.
+* ESX host must have SSH service running
+* ESX host root password must be known.
+* Destination datastore must have sufficient free space. The script does not check but will error if it cannot complete the cloning because of insufficient space.
 
-1. If not already running, start the `TSM-SSH` service on the ESX host where the VM is registered.
-2. SSH as root to the host, using the root password.
+## Usage
+
+1. If not already running, start the `TSM-SSH` service for ssh on the ESX host where the VM is registered.
+2. SSH as root to the host where the VM is registered using the root password.
 3. Download script directly to host if it has Internet access and mark it executable:
 
 ```shell
@@ -51,7 +61,6 @@ ssh root@<ESX hostname>
    2. required: cloned VM name
    3. required: cloned VM destination datastore (even if same as original VM)
    4. optional: disk format type. default: `thin`. (*See `vmkfstools` for other disk format types.*)
-
 
 ```shell
 /tmp/clone-vm.sh <original VM name> <cloned VM name> <cloned VM datastore> <optional disk format type, default: thin>
